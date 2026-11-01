@@ -1,0 +1,330 @@
+/* =====================================================================
+   COVER / PEMBUKA — Royal Java Vintage × palet "Vintage Soul"
+   ---------------------------------------------------------------------
+   Lukisan pendopo bertirai (assets/images/vintage/scene-cover.jpg)
+   menjadi latar. Teks mempelai di atas, data tamu + tombol di bawah,
+   sehingga pendopo & wayang di tengah tetap terlihat.
+   Saat "Buka Undangan" ditekan, kamera bergerak masuk ke pendopo lalu
+   berganti ke bagian dalam pendopo (sama dengan latar hero) — mulus.
+   Dimuat setelah style.css & theme-vintage.css.
+   ===================================================================== */
+
+@font-face { font-family: "Cinzel"; src: url("../assets/fonts/cinzel-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Cinzel"; src: url("../assets/fonts/cinzel-latin-600-normal.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "Cinzel"; src: url("../assets/fonts/cinzel-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Cormorant Garamond"; src: url("../assets/fonts/cormorant-garamond-latin-400-italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+
+.cover--vintage {
+  --vs-cream: #F8F1E7;
+  --vs-beige: #D8C3A5;
+  --vs-coffee: #8B6B4A;
+  --vs-burgundy: #6B2C2C;
+  --vs-choco: #3E2723;
+  /* 1px desain pada layar acuan Android 390 × 844, mengikuti lebar & tinggi layar */
+  --cw: min(100vw, var(--col, 450px));
+  --k: min(calc(var(--cw) / 390), calc(var(--vh, 100vh) / 844));
+  --ease-out: cubic-bezier(.22, .61, .36, 1);
+  --ease-in: cubic-bezier(.55, .06, .68, .19);
+  background: var(--vs-choco);
+  color: var(--vs-cream);
+  font-family: "Cormorant Garamond", Georgia, serif;
+  transition: none;
+}
+.cover--vintage.is-leaving { top: 0; opacity: 1; pointer-events: none; }
+
+/* ---------- Lapisan gambar ---------- */
+.cover__scene, .cover__inside {
+  position: absolute; inset: 0; background: var(--vs-choco) center / cover no-repeat;
+  will-change: transform, opacity;
+}
+.cover__scene { transform-origin: 50% 54%; }
+.cover__inside { opacity: 0; transform: scale(1.25); }
+
+.cover__shade {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(62, 39, 35, .92) 0%, rgba(62, 39, 35, .78) 16%, rgba(62, 39, 35, .35) 32%, rgba(62, 39, 35, 0) 42%,
+                            rgba(62, 39, 35, 0) 56%, rgba(62, 39, 35, .55) 66%, rgba(62, 39, 35, .9) 76%, rgba(62, 39, 35, .96) 100%),
+    radial-gradient(130% 80% at 50% 50%, transparent 55%, rgba(43, 26, 23, .5) 100%);
+}
+
+/* ---------- Debu emas ---------- */
+.cover__dust { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.cover__dust i {
+  position: absolute; bottom: -10px; width: var(--s, 3px); height: var(--s, 3px); border-radius: 50%;
+  background: var(--vs-beige); opacity: 0; box-shadow: 0 0 6px rgba(216, 195, 165, .8);
+  animation: cvDust var(--d, 9s) linear var(--delay, 0s) infinite;
+}
+@keyframes cvDust {
+  0% { transform: translate3d(0, 0, 0); opacity: 0; }
+  15%, 85% { opacity: var(--o, .6); }
+  100% { transform: translate3d(var(--x, 20px), calc(var(--vh, 100vh) * -.85), 0); opacity: 0; }
+}
+
+/* ---------- Bingkai ---------- */
+.cover__frame { position: absolute; inset: calc(12 * var(--k)); pointer-events: none; color: var(--vs-beige); }
+.cover__frame::before, .cover__frame::after {
+  content: ""; position: absolute; border: 1px solid rgba(216, 195, 165, .6);
+  transition: transform 1.4s var(--ease-out), opacity 1.4s var(--ease-out);
+}
+.cover__frame::before { inset: 0; }
+.cover__frame::after { inset: calc(6 * var(--k)); border-color: rgba(216, 195, 165, .3); }
+.cover__corner { position: absolute; width: calc(58 * var(--k)); height: calc(58 * var(--k)); display: block; }
+.cover__corner svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.cover__corner--tl { top: calc(-3 * var(--k)); left: calc(-3 * var(--k)); }
+.cover__corner--tr { top: calc(-3 * var(--k)); right: calc(-3 * var(--k)); transform: scaleX(-1); }
+.cover__corner--bl { bottom: calc(-3 * var(--k)); left: calc(-3 * var(--k)); transform: scaleY(-1); }
+.cover__corner--br { bottom: calc(-3 * var(--k)); right: calc(-3 * var(--k)); transform: scale(-1); }
+.cover__corner path { stroke-dasharray: 220; stroke-dashoffset: 220; }
+.cover__corner circle { opacity: 0; }
+
+/* ---------- Blok atas: mempelai ---------- */
+.cover__top {
+  position: absolute; left: calc(24 * var(--k)); right: calc(24 * var(--k)); top: calc(34 * var(--k));
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+}
+.cover--vintage .cover__eyebrow {
+  position: static; font-family: "Cinzel", Georgia, serif; font-weight: 600;
+  font-size: max(calc(12 * var(--k)), 10px); letter-spacing: .38em; text-indent: .38em; line-height: 1.4;
+  color: var(--vs-beige); text-transform: uppercase;
+}
+.cover--vintage .cover__names {
+  position: static; margin-top: calc(2 * var(--k)); display: flex; flex-direction: column; align-items: center;
+  font-family: "Pinyon Script", cursive; font-weight: 400; white-space: nowrap; line-height: 1;
+  color: var(--vs-cream); text-shadow: 0 2px 16px rgba(30, 18, 15, .7);
+}
+.cover__name { display: block; font-size: max(calc(52 * var(--k)), 32px); line-height: 1.12; padding: 0 .12em; }
+.cover__amp {
+  display: block; margin: calc(-8 * var(--k)) 0 calc(-8 * var(--k));
+  font-family: "Cormorant Garamond", Georgia, serif; font-style: italic; font-size: max(calc(26 * var(--k)), 18px);
+  color: var(--vs-beige); line-height: 1;
+}
+.cover__date {
+  margin-top: calc(6 * var(--k)); padding: calc(3 * var(--k)) calc(12 * var(--k));
+  border-top: 1px solid rgba(216, 195, 165, .5); border-bottom: 1px solid rgba(216, 195, 165, .5);
+  font-family: "Cinzel", Georgia, serif; font-weight: 400;
+  font-size: max(calc(12 * var(--k)), 10px); letter-spacing: .2em; line-height: 1.4; color: var(--vs-cream);
+}
+
+/* ---------- Blok tengah: Arch Photo Frame (seperti referensi gambar) ---------- */
+.cover__middle {
+  position: absolute; left: 50%; top: 49%; transform: translate(-50%, -50%);
+  z-index: 5; display: flex; justify-content: center; align-items: center;
+}
+.cover__portrait {
+  position: relative;
+  width: calc(196 * var(--k));
+  height: calc(294 * var(--k));
+  margin: 0 auto;
+}
+.cover__portrait-frame {
+  position: absolute; inset: 0; z-index: 1;
+  border-radius: calc(98 * var(--k)) calc(98 * var(--k)) calc(78 * var(--k)) calc(78 * var(--k));
+  border: calc(3.2 * var(--k)) solid #5a141e;
+  box-shadow: 0 calc(14 * var(--k)) calc(34 * var(--k)) rgba(0, 0, 0, .6);
+  background: var(--vs-choco);
+}
+.cover__portrait-frame::before {
+  content: ""; position: absolute;
+  inset: calc(-6 * var(--k));
+  border: 1px solid rgba(216, 195, 165, .65);
+  border-radius: calc(104 * var(--k)) calc(104 * var(--k)) calc(84 * var(--k)) calc(84 * var(--k));
+  pointer-events: none;
+}
+.cover__portrait-frame::after {
+  content: ""; position: absolute;
+  inset: 0; border-radius: inherit;
+  box-shadow: inset 0 0 calc(22 * var(--k)) rgba(0, 0, 0, .4);
+  pointer-events: none;
+}
+.cover__portrait-img {
+  width: 100%; height: 100%; object-fit: cover; object-position: center 25%;
+  display: block;
+  border-radius: calc(95 * var(--k)) calc(95 * var(--k)) calc(75 * var(--k)) calc(75 * var(--k));
+  filter: var(--photo-tone, sepia(.18) saturate(.98) contrast(1.03));
+  transition: transform .6s var(--ease-out);
+}
+.cover__portrait:hover .cover__portrait-img { transform: scale(1.04); }
+
+/* Ornamen Bunga (frame-flower.webp) */
+.cover__portrait-flower {
+  position: absolute; pointer-events: none;
+  filter: drop-shadow(0 calc(4 * var(--k)) calc(12 * var(--k)) rgba(0, 0, 0, .45));
+}
+.cover__portrait-flower--back {
+  z-index: 0; width: calc(150 * var(--k)); height: auto;
+  left: calc(-48 * var(--k)); top: calc(42 * var(--k));
+  transform: scaleX(-1) rotate(12deg); opacity: .92;
+  animation: cvSwayBack 7s ease-in-out infinite alternate;
+  transform-origin: 80% 20%;
+}
+.cover__portrait-flower--front {
+  z-index: 2; width: calc(130 * var(--k)); height: auto;
+  right: calc(-40 * var(--k)); bottom: calc(-28 * var(--k));
+  animation: cvSwayFront 6s ease-in-out .5s infinite alternate;
+  transform-origin: 30% 10%;
+}
+@keyframes cvSwayBack {
+  from { transform: scaleX(-1) rotate(10deg); }
+  to { transform: scaleX(-1) rotate(15deg); }
+}
+@keyframes cvSwayFront {
+  from { transform: rotate(-3deg); }
+  to { transform: rotate(3deg); }
+}
+
+/* ---------- Blok bawah: tamu & tombol ---------- */
+.cover__bottom {
+  position: absolute; left: calc(26 * var(--k)); right: calc(26 * var(--k)); bottom: calc(28 * var(--k));
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+}
+.cover__divider { width: calc(160 * var(--k)); margin-bottom: calc(10 * var(--k)); color: var(--vs-beige); }
+.cover__divider svg { display: block; width: 100%; height: auto; overflow: visible; }
+.cover--vintage .cover__guest { position: static; width: 100%; }
+.cover--vintage .cover__to, .cover--vintage .cover__place {
+  font-family: "Cormorant Garamond", Georgia, serif; font-style: italic; font-weight: 500;
+  font-size: max(calc(15 * var(--k)), 13px); line-height: 1.3; color: var(--vs-beige);
+}
+.cover--vintage .cover__guest-name {
+  display: inline-block; max-width: 100%; margin-top: calc(6 * var(--k)); padding: calc(4 * var(--k)) calc(10 * var(--k));
+  font-family: "Cinzel", Georgia, serif; font-weight: 600; font-size: max(calc(19 * var(--k)), 15px); letter-spacing: .04em;
+  line-height: 1.25; color: var(--vs-cream); overflow-wrap: anywhere;
+}
+.cover--vintage .cover__place { margin-top: calc(4 * var(--k)); }
+.cover__invite {
+  margin-top: calc(10 * var(--k)); font-family: "Cormorant Garamond", Georgia, serif; font-style: italic; font-weight: 400;
+  font-size: max(calc(14 * var(--k)), 12.5px); line-height: 1.35; color: rgba(248, 241, 231, .85);
+}
+.cover__invite:empty { display: none; }
+.cover--vintage .cover__action { position: relative; top: auto; left: auto; right: auto; margin-top: calc(16 * var(--k)); }
+
+/* ---------- Tombol Buka Undangan ---------- */
+.cover--vintage .btn-open {
+  position: relative; overflow: hidden; isolation: isolate;
+  height: max(calc(46 * var(--k)), 42px); padding: 0 max(calc(28 * var(--k)), 22px); gap: calc(10 * var(--k));
+  border: 1px solid var(--vs-beige); border-radius: 999px; outline: 1px solid rgba(216, 195, 165, .35); outline-offset: 4px;
+  background: linear-gradient(180deg, #7a3434 0%, var(--vs-burgundy) 55%, #5a2323 100%);
+  color: var(--vs-cream); font-family: "Cinzel", Georgia, serif; font-weight: 600;
+  font-size: max(calc(13 * var(--k)), 12px); letter-spacing: .14em; text-transform: uppercase;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, .4), inset 0 1px 0 rgba(248, 241, 231, .25);
+  transition: transform .35s var(--ease-out), box-shadow .35s;
+}
+.cover--vintage .btn-open .ico { font-size: max(calc(14 * var(--k)), 13px); color: var(--vs-beige); }
+.cover--vintage .btn-open::before {
+  content: ""; position: absolute; z-index: -1; top: 0; bottom: 0; left: -60%; width: 45%;
+  background: linear-gradient(100deg, transparent, rgba(248, 241, 231, .28), transparent);
+  transform: skewX(-20deg); animation: cvShine 3.6s ease-in-out 2.8s infinite;
+}
+.cover--vintage .btn-open::after {
+  content: ""; position: absolute; inset: -1px; border-radius: inherit; border: 1px solid var(--vs-beige);
+  opacity: 0; pointer-events: none;
+}
+.cover--vintage.is-ready .btn-open::after { animation: cvPulse 2.4s ease-out 2.6s infinite; }
+.cover--vintage .btn-open:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(248, 241, 231, .3); }
+.cover--vintage .btn-open:active { transform: scale(.97); }
+.cover--vintage .btn-open:focus-visible { outline: 2px solid var(--vs-beige); outline-offset: 4px; }
+.cover__ripple {
+  position: absolute; z-index: -1; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%;
+  background: rgba(248, 241, 231, .45); pointer-events: none; animation: cvRipple .7s ease-out forwards;
+}
+@keyframes cvShine { 0%, 55% { left: -60%; } 100% { left: 130%; } }
+@keyframes cvPulse { 0% { transform: scale(1); opacity: .7; } 100% { transform: scale(1.25, 1.6); opacity: 0; } }
+@keyframes cvRipple { to { transform: scale(40); opacity: 0; } }
+
+/* =====================================================================
+   ANIMASI MASUK (.is-ready dari script.js setelah font siap)
+   ===================================================================== */
+.cover--vintage .cover__scene { transform: scale(1.1); transition: transform 7s var(--ease-out); }
+.cover--vintage.is-ready .cover__scene { transform: scale(1); }
+.cover--vintage .cover__shade, .cover--vintage .cover__eyebrow, .cover--vintage .cover__name, .cover--vintage .cover__amp,
+.cover--vintage .cover__date, .cover--vintage .cover__portrait, .cover--vintage .cover__divider, .cover--vintage .cover__guest,
+.cover--vintage .cover__invite, .cover--vintage .cover__action { opacity: 0; }
+.cover--vintage .cover__frame::before, .cover--vintage .cover__frame::after { opacity: 0; transform: scale(1.04); }
+
+.cover--vintage.is-ready .cover__shade { animation: cvFade 1.6s ease-out both; }
+.cover--vintage.is-ready .cover__frame::before, .cover--vintage.is-ready .cover__frame::after { opacity: 1; transform: none; transition-delay: .3s; }
+.cover--vintage.is-ready .cover__corner path { animation: cvDraw 2s var(--ease-out) .5s forwards; }
+.cover--vintage.is-ready .cover__corner circle { animation: cvFade .6s ease-out 1.6s forwards; }
+.cover--vintage.is-ready .cover__eyebrow { animation: cvSpread 1.4s var(--ease-out) .6s both; }
+.cover--vintage.is-ready .cover__name--a { animation: cvRise 1.3s var(--ease-out) .85s both; }
+.cover--vintage.is-ready .cover__amp { animation: cvAmp 1.1s var(--ease-out) 1.1s both; }
+.cover--vintage.is-ready .cover__name--b { animation: cvRise 1.3s var(--ease-out) 1.25s both; }
+.cover--vintage.is-ready .cover__date { animation: cvUp 1s var(--ease-out) 1.45s both; }
+.cover--vintage.is-ready .cover__portrait { animation: cvPortraitIn 1.3s var(--ease-out) 1.4s both; }
+.cover--vintage.is-ready .cover__divider { animation: cvWiden 1s var(--ease-out) 1.7s both; }
+.cover--vintage.is-ready .cover__guest { animation: cvUp 1s var(--ease-out) 1.85s both; }
+.cover--vintage.is-ready .cover__invite { animation: cvUp 1s var(--ease-out) 2.0s both; }
+.cover--vintage.is-ready .cover__action { animation: cvUp 1s var(--ease-out) 2.15s both; }
+
+@keyframes cvFade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes cvDraw { to { stroke-dashoffset: 0; } }
+@keyframes cvSpread { from { opacity: 0; letter-spacing: .9em; } to { opacity: 1; letter-spacing: .38em; } }
+@keyframes cvRise { from { opacity: 0; transform: translateY(22px); filter: blur(6px); } to { opacity: 1; transform: none; filter: blur(0); } }
+@keyframes cvAmp { from { opacity: 0; transform: scale(.4) rotate(-25deg); } to { opacity: 1; transform: none; } }
+@keyframes cvUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes cvWiden { from { opacity: 0; transform: scaleX(.2); } to { opacity: 1; transform: none; } }
+@keyframes cvPortraitIn {
+  from { opacity: 0; transform: translateY(22px) scale(.92); filter: blur(6px); }
+  to { opacity: 1; transform: none; filter: blur(0); }
+}
+
+/* =====================================================================
+   TRANSISI MEMBUKA (.is-leaving dari script.js; durasi = effects.coverExitMs)
+   0–0.6s   teks, foto, & bingkai memudar
+   0.15–2.05s kamera maju masuk ke pintu pendopo
+   1.0–2.25s berganti ke bagian dalam pendopo (= latar hero), lalu cover hilang
+   ===================================================================== */
+.cover--vintage.is-leaving .cover__top,
+.cover--vintage.is-leaving .cover__middle,
+.cover--vintage.is-leaving .cover__bottom,
+.cover--vintage.is-leaving .cover__dust { animation: cvOutUp .6s ease-in forwards; }
+.cover--vintage.is-leaving .cover__frame { animation: cvOut .5s ease-in forwards; }
+.cover--vintage.is-leaving .cover__shade { animation: cvOut .9s ease-in .1s both; }
+.cover--vintage.is-leaving .cover__scene { animation: cvZoomIn 1.9s var(--ease-in) .15s both; }
+.cover--vintage.is-leaving .cover__inside { animation: cvInside 1.25s var(--ease-out) 1s both; }
+
+@keyframes cvOut { from { opacity: 1; } to { opacity: 0; } }
+@keyframes cvOutUp { from { opacity: 1; transform: none; filter: blur(0); } to { opacity: 0; transform: translateY(-14px); filter: blur(4px); } }
+@keyframes cvZoomIn { from { transform: scale(1); filter: blur(0); } to { transform: scale(3.4); filter: blur(3px); } }
+@keyframes cvInside { from { opacity: 0; transform: scale(1.25); } to { opacity: 1; transform: scale(1); } }
+
+/* Layar pendek (HP layar sedang & kecil) */
+@media (max-height: 760px) {
+  .cover__portrait { width: calc(165 * var(--k)); height: calc(248 * var(--k)); }
+  .cover__top { top: calc(28 * var(--k)); }
+  .cover__divider { margin-bottom: calc(6 * var(--k)); }
+  .cover--vintage .cover__action { margin-top: calc(12 * var(--k)); }
+}
+@media (max-height: 660px) {
+  .cover__portrait { width: calc(138 * var(--k)); height: calc(205 * var(--k)); }
+  .cover--vintage .cover__invite { display: none; }
+  .cover__bottom { bottom: calc(20 * var(--k)); }
+  .cover__top { top: calc(20 * var(--k)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cover--vintage .cover__scene { transform: none; transition: none; }
+  .cover--vintage *, .cover--vintage *::before, .cover--vintage *::after { animation: none !important; }
+  .cover--vintage .cover__shade, .cover--vintage .cover__eyebrow, .cover--vintage .cover__name, .cover--vintage .cover__amp,
+  .cover--vintage .cover__date, .cover--vintage .cover__portrait, .cover--vintage .cover__divider, .cover--vintage .cover__guest, .cover--vintage .cover__invite,
+  .cover--vintage .cover__action, .cover--vintage .cover__frame::before, .cover--vintage .cover__frame::after { opacity: 1; transform: none; }
+  .cover--vintage .cover__corner path { stroke-dashoffset: 0; }
+  .cover--vintage .cover__corner circle { opacity: 1; }
+  .cover__dust { display: none; }
+}
+
+/* HP landscape / layar sangat pendek: sembunyikan foto tengah agar tombol & teks pas */
+@media (max-height: 520px) {
+  .cover__middle { display: none; }
+  .cover--vintage .cover__names { flex-direction: row; align-items: baseline; gap: .25em; }
+  .cover__name { font-size: max(calc(40 * var(--k)), 24px); }
+  .cover__amp { margin: 0; font-size: max(calc(22 * var(--k)), 15px); }
+  .cover__top { top: calc(26 * var(--k)); }
+  .cover__date { margin-top: 2px; }
+  .cover__divider, .cover--vintage .cover__invite { display: none; }
+  .cover__bottom { bottom: calc(22 * var(--k)); }
+  .cover--vintage .cover__to, .cover--vintage .cover__place { font-size: 12px; }
+  .cover--vintage .cover__guest-name { font-size: 14px; margin-top: 2px; padding-block: 2px; }
+  .cover--vintage .cover__action { margin-top: 8px; }
+  .cover--vintage .btn-open { height: 36px; }
+}

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#f3f6fb">
+  <title>AR Undangan</title>
+  <link rel="icon" href="assets/icons/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="css/icons.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/extras.css">
+  <style>
+    html, body { height: 100%; }
+    body.ar-page { overflow: hidden; background: #e9eff8; }
+    .ar {
+      position: relative; height: 100vh; height: 100dvh; max-width: var(--content-max); margin: 0 auto;
+      display: grid; grid-template-rows: auto 1fr auto; overflow: hidden;
+      background: #f7f9fd url("assets/images/scene/paper.jpg") center top / cover no-repeat;
+      box-shadow: 0 0 50px rgba(21, 45, 87, .18);
+    }
+    .ar::after { content: ""; position: absolute; inset: auto 0 0; height: 45%; background: linear-gradient(180deg, rgba(241,245,251,0), rgba(201,216,239,.7)); pointer-events: none; }
+    .ar__head { position: relative; z-index: 1; padding: max(24px, env(safe-area-inset-top)) 20px 0; text-align: center; }
+    .ar__gunungan { width: 44px; margin: 0 auto 6px; filter: drop-shadow(0 4px 6px rgba(31,63,116,.25)); }
+    .ar__eyebrow { font-family: var(--font-display); font-size: 12px; letter-spacing: .3em; text-indent: .3em; color: var(--gold-dark); }
+    .ar__names { font-family: var(--font-script); font-size: 46px; line-height: 1.1; color: var(--navy); overflow-wrap: anywhere; }
+    .ar__viewer { position: relative; z-index: 1; min-height: 0; }
+    .ar__viewer model-viewer { width: 100%; height: 100%; --poster-color: transparent; --progress-bar-color: var(--gold-light); }
+    .ar__foot { position: relative; z-index: 2; padding: 0 20px max(22px, env(safe-area-inset-bottom)); text-align: center; display: grid; gap: 12px; justify-items: center; }
+    .ar__note { max-width: 34ch; font-size: 15px; line-height: 1.55; color: var(--ink-soft); }
+    .ar__note:empty { display: none; }
+    .ar__steps { margin: 0; padding: 0; list-style: none; font-size: 14px; color: var(--ink-soft); }
+    .ar__steps li { margin: 2px 0; }
+    .ar__actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+    .ar__arbtn { position: absolute; left: 50%; bottom: 16px; translate: -50% 0; }
+  </style>
+</head>
+<body class="ar-page">
+  <main class="ar">
+    <header class="ar__head">
+      <img class="ar__gunungan" src="assets/images/gunungan.webp" alt="">
+      <p class="ar__eyebrow">The Wedding Of</p>
+      <h1 class="ar__names" id="arNames"></h1>
+    </header>
+
+    <div class="ar__viewer" id="arViewer"></div>
+
+    <footer class="ar__foot">
+      <p class="ar__note" id="arNote" role="status"></p>
+      <ol class="ar__steps" id="arSteps" hidden>
+        <li>1. Ketuk "Tampilkan di ruangan Anda".</li>
+        <li>2. Arahkan kamera ke lantai atau meja, gerakkan HP perlahan.</li>
+        <li>3. Ketuk untuk menaruh, geser dan cubit untuk mengatur.</li>
+      </ol>
+      <div class="ar__actions">
+        <a class="btn btn--ghost" id="arBack" href="index.html"><i class="ico i-envelope-open" aria-hidden="true"></i><span>Buka undangan</span></a>
+      </div>
+    </footer>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/ar.js"></script>
+</body>
+</html>

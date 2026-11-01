@@ -1,0 +1,158 @@
+/* =====================================================================
+   EXTRAS (opsional) — fitur dari versi sebelumnya yang TIDAK ada di
+   desain referensi: pembuka kipas Jawa, adegan joglo berlapis, untaian
+   bunga gantung, kelopak jatuh, dan Pendopo 3D/AR.
+   Gaya ini hanya berpengaruh bila fitur diaktifkan di js/config.js
+   (extras.*). Dipertahankan apa adanya dari versi sebelumnya.
+   ===================================================================== */
+:root {
+  --navy-900: #152d57; --navy: #1f3f74; --navy-700: #2a5193; --blue: #4a78c2;
+  --blue-200: #c9d8ef; --blue-100: #e2eaf6; --blue-50: #f1f5fb;
+  --ink: #1f3359; --ink-soft: #4d6185; --gold: #c4a061; --gold-light: #e3c98c; --gold-dark: #8f6d2f;
+  --line: rgba(31, 63, 116, .22); --paper: none; --paper-tile: none;
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --content-max: 450px;
+  --shadow: 0 18px 40px rgba(21, 45, 87, .16); --shadow-sm: 0 6px 16px rgba(21, 45, 87, .14);
+  --ease-out: cubic-bezier(.22, .61, .36, 1);
+}
+/* =====================================================================
+   0. PEMBUKA — KIPAS JAWA + GUNUNGAN
+   ===================================================================== */
+.intro {
+  --fan-w: min(31vw, 26vh, 210px);
+  --fan-h: calc(var(--fan-w) * 1.61);
+  position: fixed; inset: 0; z-index: 90;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px;
+  background: radial-gradient(ellipse at 50% 45%, rgba(255, 255, 255, .95), rgba(241, 245, 251, .6) 60%, rgba(201, 216, 239, .5)), var(--paper) center / cover, #f7f9fd;
+  cursor: pointer; overflow: hidden;
+  transition: opacity .9s ease, visibility 0s .9s;
+}
+.intro__fan { position: relative; width: var(--fan-w); height: var(--fan-h); margin-top: calc(var(--fan-h) * .35); opacity: 0; scale: .6; transition: opacity .9s ease, scale 1.3s cubic-bezier(.2, .9, .25, 1.12); }
+.intro.is-shown .intro__fan { opacity: 1; scale: 1; }
+.intro__gunungan { position: absolute; inset: 0; z-index: 2; filter: drop-shadow(0 10px 16px rgba(31, 63, 116, .28)); }
+.intro__gunungan > .media { width: 100%; height: 100%; object-fit: contain; }
+.intro.is-open .intro__gunungan { animation: gunGleam 2.6s ease-in-out .6s infinite; }
+@keyframes gunGleam { 0%, 100% { filter: drop-shadow(0 10px 16px rgba(31, 63, 116, .28)) brightness(1); } 50% { filter: drop-shadow(0 0 22px rgba(227, 201, 140, .9)) brightness(1.12); } }
+.intro__ribs { position: absolute; left: 50%; bottom: 0; width: 0; height: 0; z-index: 1; }
+.intro__ribs::after { /* bingkai busur emas */
+  content: ""; position: absolute; left: calc(var(--fan-h) * -.92); bottom: calc(var(--fan-h) * -.92);
+  width: calc(var(--fan-h) * 1.84); height: calc(var(--fan-h) * 1.84); border-radius: 50%;
+  border: 3px solid var(--gold); box-shadow: 0 0 0 5px rgba(255, 255, 255, .85), 0 0 0 6px rgba(196, 160, 97, .6);
+  clip-path: inset(0 0 50% 0); opacity: 0; scale: .2; transition: opacity .6s ease .9s, scale 1.2s cubic-bezier(.3, .9, .3, 1) .25s;
+}
+.intro.is-open .intro__ribs::after { opacity: 1; scale: 1; }
+.intro__rib {
+  position: absolute; left: 0; bottom: 0;
+  width: calc(var(--fan-h) * var(--w) / 100 * .9); height: calc(var(--fan-h) * .9);
+  translate: -50% 0; transform-origin: 50% 100%; rotate: 0deg;
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
+  background:
+    linear-gradient(90deg, transparent calc(50% - 1.5px), var(--gold) calc(50% - 1.5px), #fff0c4 50%, var(--gold) calc(50% + 1.5px), transparent calc(50% + 1.5px)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0) 60%, rgba(31, 63, 116, .25)),
+    url("../assets/images/porcelain.webp") center top / 80px, #f7f9fd;
+  transition: rotate 1.35s cubic-bezier(.3, .95, .3, 1);
+}
+.intro__rib--alt { background:
+    linear-gradient(90deg, transparent calc(50% - 1.5px), var(--gold) calc(50% - 1.5px), #fff0c4 50%, var(--gold) calc(50% + 1.5px), transparent calc(50% + 1.5px)),
+    linear-gradient(180deg, var(--navy-700), var(--navy-900)); }
+.intro.is-open .intro__rib { rotate: var(--a); }
+.intro__text { text-align: center; opacity: 0; translate: 0 16px; transition: opacity 1s ease 1.4s, translate 1s var(--ease-out) 1.4s; }
+.intro.is-open .intro__text { opacity: 1; translate: 0 0; }
+.intro__eyebrow { font-family: var(--font-display); font-size: 13px; letter-spacing: .3em; text-indent: .3em; color: var(--gold-dark); }
+.intro__names { font-size: 46px; color: var(--navy); padding: 0 16px; }
+.intro__skip { position: absolute; bottom: max(20px, env(safe-area-inset-bottom)); font-size: 14px; color: var(--ink-soft); opacity: .7; }
+.intro.is-leaving { opacity: 0; visibility: hidden; pointer-events: none; }
+.intro.is-leaving .intro__fan { scale: 2.6; opacity: 0; transition: scale 1s cubic-bezier(.6, 0, .4, 1), opacity .8s ease .1s; }
+.intro.is-leaving .intro__text { opacity: 0; transition-delay: 0s; transition-duration: .4s; }
+
+/* =====================================================================
+   ADEGAN: joglo emas di atas hamparan bunga + untaian bunga menggantung
+   ===================================================================== */
+.jscene {
+  position: relative; z-index: 1;
+  width: calc(100% + var(--pad-x) * 2); aspect-ratio: 1080 / 920;
+  margin: 18px calc(var(--pad-x) * -1) calc(var(--section-pad) * -1);
+  overflow: hidden; pointer-events: none;
+}
+.jscene .layer { position: absolute; inset: 0 -4%; }
+.layer__media { position: absolute; }
+.layer__media > .media { display: block; width: 100%; height: 100%; object-fit: fill; }
+.jscene .sparkles { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 5; }
+.jscene:not(.is-visible) *, .jscene:not(.is-visible) { animation-play-state: paused !important; }
+/* animasi masuk */
+.enter-fade, .enter-rise, .enter-rise-late { opacity: 0; transition: opacity 1.3s ease, translate 1.5s var(--ease-out); }
+.enter-rise { translate: 0 14%; }
+.enter-rise-late { translate: 0 10%; transition-delay: .35s; }
+.jscene.is-in .enter-fade, .jscene.is-in .enter-rise, .jscene.is-in .enter-rise-late { opacity: 1; translate: 0 0; }
+/* animasi idle */
+.anim-sway { transform-origin: 50% 100%; animation: sway 6s ease-in-out infinite; }
+.anim-breathe { transform-origin: 50% 100%; animation: breathe 7s ease-in-out infinite; }
+.anim-float { animation: float 5s ease-in-out infinite; }
+.anim-drift { animation: drift 24s ease-in-out infinite alternate; }
+@keyframes sway { 0%, 100% { rotate: -.7deg; } 50% { rotate: .7deg; } }
+@keyframes breathe { 0%, 100% { scale: 1; } 50% { scale: 1.025; } }
+@keyframes float { 0%, 100% { scale: 1; } 50% { scale: 1.01; } }
+@keyframes drift { from { rotate: 0deg; scale: 1; } to { scale: 1.04; } }
+/* karakter animasi (opsional) di depan joglo */
+.hero__character { position: absolute; z-index: 3; left: 50%; bottom: 14%; width: var(--char-w, 34%); aspect-ratio: 3 / 4; translate: -50% 30px; opacity: 0; transition: opacity 1.4s ease, translate 1.6s var(--ease-out); }
+.hero.is-opened .hero__character { opacity: 1; translate: -50% 0; }
+.hero__character > .media { width: 100%; height: 100%; object-fit: contain; }
+/* kupu-kupu */
+.butterfly { position: absolute; z-index: 4; width: 8%; aspect-ratio: 1; left: 12%; top: 40%; }
+.butterfly__wing { position: absolute; inset: 0; background-size: 200% 100%; background-repeat: no-repeat; animation: flap .22s steps(1, end) infinite; }
+.butterfly--0 { animation: fly0 16s ease-in-out infinite; }
+.butterfly--1 { width: 6.5%; animation: fly1 19s ease-in-out -4s infinite; }
+.butterfly--2 { width: 5.5%; animation: fly2 22s ease-in-out -9s infinite; }
+@keyframes flap { 0% { background-position: 0 0; } 50% { background-position: 100% 0; } }
+@keyframes fly0 { 0% { left: 6%; top: 46%; rotate: 10deg; } 25% { left: 26%; top: 22%; rotate: 25deg; } 50% { left: 44%; top: 34%; rotate: -5deg; } 75% { left: 20%; top: 52%; rotate: -20deg; } 100% { left: 6%; top: 46%; rotate: 10deg; } }
+@keyframes fly1 { 0% { left: 82%; top: 30%; rotate: -15deg; } 30% { left: 66%; top: 14%; rotate: -30deg; } 60% { left: 88%; top: 44%; rotate: 10deg; } 100% { left: 82%; top: 30%; rotate: -15deg; } }
+@keyframes fly2 { 0% { left: 58%; top: 8%; rotate: 5deg; } 40% { left: 36%; top: 16%; rotate: -25deg; } 70% { left: 72%; top: 22%; rotate: 20deg; } 100% { left: 58%; top: 8%; rotate: 5deg; } }
+
+.hang { position: absolute; top: 0; z-index: 1; width: 29%; max-width: 130px; pointer-events: none; transform-origin: 30% 0; animation: hangSway 7s ease-in-out infinite, hangIn 1.6s var(--ease-out) both; }
+.hang--left { left: 0; }
+.hang--right { right: 0; scale: -1 1; animation-delay: -2.5s, 0s; }
+.hang > .media { width: 100%; height: auto; }
+@keyframes hangSway { 0%, 100% { rotate: -1.2deg; } 50% { rotate: 1.4deg; } }
+@keyframes hangIn { from { opacity: 0; translate: 0 -30%; } to { opacity: 1; translate: 0 0; } }
+
+/* Bunga jatuh */
+.petals { position: fixed; z-index: 85; top: 0; left: 50%; translate: -50% 0; width: min(100vw, var(--content-max)); height: 100vh; height: 100dvh; pointer-events: none; }
+
+/* Slot media umum */
+[data-media] > .media, .event-card__icon > .media { display: block; width: 100%; height: 100%; object-fit: contain; }
+.media--lottie > canvas { display: block; }
+.media--model model-viewer { width: 100%; height: 100%; --poster-color: transparent; }
+
+/* =====================================================================
+   5b. PENDOPO 3D + AR
+   ===================================================================== */
+.venue3d { padding-top: 70px; padding-bottom: 64px; }
+.venue3d .lead { margin-bottom: 22px; }
+.venue3d__viewer {
+  position: relative; aspect-ratio: 4 / 3.4; border-radius: 24px; overflow: hidden;
+  background: radial-gradient(ellipse at 50% 35%, #ffffff, var(--blue-100) 70%, var(--blue-200));
+  box-shadow: var(--shadow), 0 0 0 1px var(--line), inset 0 0 0 6px rgba(255, 255, 255, .8);
+}
+.venue3d__viewer model-viewer { position: absolute; inset: 0; width: 100%; height: 100%; --poster-color: transparent; --progress-bar-color: var(--navy); }
+.venue3d__poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; transition: opacity .6s; }
+.venue3d__viewer.is-loaded .venue3d__poster { opacity: 0; }
+.venue3d__status { position: absolute; left: 12px; right: 12px; bottom: 12px; font-size: 14px; color: var(--navy); }
+.venue3d__status:empty { display: none; }
+.venue3d__hint { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 12px 0 18px; font-size: 14px; color: var(--ink-soft); }
+.venue3d__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+
+
+/* Tombol & tipografi versi sebelumnya (dipakai ar.html dan section Pendopo 3D) */
+.x-legacy .btn, .ar-page .btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .55em;
+  min-height: 42px; padding: 10px 24px; border: 1px solid transparent; border-radius: 999px;
+  font-family: var(--font-display); font-size: 13px; font-weight: 600; letter-spacing: .1em; line-height: 1.2;
+  text-decoration: none; cursor: pointer;
+}
+.x-legacy .btn--primary, .ar-page .btn--primary { background: linear-gradient(180deg, var(--navy-700), var(--navy)); color: #fff; }
+.x-legacy .btn--ghost, .ar-page .btn--ghost { background: rgba(255, 255, 255, .7); color: var(--navy); border-color: var(--navy); }
+.ar-page { --font-script: "Pinyon Script", cursive; font-family: var(--font-display); color: var(--ink); }
+.x-legacy .heading-pair__script { font-family: "Pinyon Script", cursive; font-size: 50px; line-height: 1; color: #284B73; }
+.x-legacy .heading-pair__caps { font-family: var(--font-display); font-size: 24px; color: #284B73; }
+.x-legacy .lead { font-size: 15px; line-height: 1.5; color: #284B73; margin: 10px auto 20px; max-width: 34ch; text-align: center; }
+.x-legacy { padding: 60px 20px; text-align: center; background: rgba(255, 255, 255, .9); }
